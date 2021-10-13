@@ -9,15 +9,16 @@ import {
   Heading,
 } from "@chakra-ui/react";
 
-import { useState, useRef } from "react";
-import getConfig from "next/config";
+import { useState, useRef, useContext } from "react";
 import { useRouter } from "next/dist/client/router";
+import AuthContext from "../store/auth-context";
 
 const AuthForm = () => {
   const enteredEmailRef = useRef();
   const enteredPasswordRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
   const router = useRouter();
+  const authCtx = useContext(AuthContext);
 
   const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
 
@@ -53,7 +54,7 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        console.log(data);
+        authCtx.login(data.idToken);
       });
   };
 
