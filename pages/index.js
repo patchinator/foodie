@@ -1,6 +1,10 @@
 import Head from "next/head";
+import { useContext } from "react";
+import AuthContext from "../store/auth-context";
 
 export default function Home() {
+  const authCtx = useContext(AuthContext);
+
   return (
     <div>
       <Head>
@@ -9,6 +13,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>hello</h1>
+      {authCtx.isLoggedIn && <p>Logged in</p>}
+      
     </div>
   );
 }
