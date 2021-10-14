@@ -7,6 +7,8 @@ import {
   Box,
   Container,
   Heading,
+  Flex,
+  useToast,
 } from "@chakra-ui/react";
 
 import { useState, useRef, useContext } from "react";
@@ -16,11 +18,18 @@ import AuthContext from "../store/auth-context";
 const AuthForm = () => {
   const enteredEmailRef = useRef();
   const enteredPasswordRef = useRef();
+  const enteredDisplayNameRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const authCtx = useContext(AuthContext);
+  const toast = useToast();
 
   const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
+
+  const authModeHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -28,9 +37,11 @@ const AuthForm = () => {
     const enteredEmail = enteredEmailRef.current.value;
     const enteredPassword = enteredPasswordRef.current.value;
 
-    fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API}`,
-      {
+    let url;
+    if (isLogin) {
+      url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API}`;
+
+      fetch(url, {
         method: "POST",
         body: JSON.stringify({
           email: enteredEmail,
@@ -38,34 +49,106 @@ const AuthForm = () => {
           returnSecureToken: true,
         }),
         headers: { "Content-Type": "application/json" },
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication Failed";
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-              throw new Error(errorMessage);
-            }
-          });
-        }
       })
-      .then((data) => {
-        authCtx.login(data.idToken);
-      });
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            return res.json().then((data) => {
+              let errorMessage = "Authentication Failed";
+              if (data && data.error && data.error.message) {
+                errorMessage = data.error.message;
+                throw new Error(errorMessage);
+              }
+            });
+          }
+        })
+        .then((data) => {
+          authCtx.login(data.idToken, data.displayName, data.email);
+          router.push("/")
+        })
+        .catch((error) => {
+          toast({
+            description: `${error.message.split("_").join(" ")}`,
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
+        });
+    } else {
+      const enteredDisplayName = enteredDisplayNameRef.current.value;
+      url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE_API}`;
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+          displayName: enteredDisplayName,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            return res.json().then((data) => {
+              let errorMessage = "Authentication Failed";
+              if (data && data.error && data.error.message) {
+                errorMessage = data.error.message;
+                throw new Error(errorMessage);
+              }
+            });
+          }
+        })
+        .then((data) => {
+          setIsLogin(true);
+          toast({
+            description: `Welcome ${data.displayName}. Time to login!`,
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+          });
+        })
+        .catch((error) => {
+          toast({
+            description: `${error.message.split("_").join(" ")}`,
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
+        });
+    }
   };
 
   return (
     <Container mt="10">
       <form onSubmit={submitHandler}>
         <Box>
-          <Heading textAlign="center">Login</Heading>
+          <Heading textAlign="center">
+            {isLogin ? "Login" : "Create Account"}
+          </Heading>
         </Box>
+
+        {!isLogin && (
+          <FormControl id="username">
+            <FormLabel mt="2">Create Username</FormLabel>
+            <Input
+              type="username"
+              placeholder="John"
+              ref={enteredDisplayNameRef}
+            ></Input>
+            <FormHelperText>Create a username for your account.</FormHelperText>
+          </FormControl>
+        )}
+
         <FormControl id="email">
-          <FormLabel>Email address</FormLabel>
+          <FormLabel>
+            {isLogin ? "Email Address" : "New Email address"}
+          </FormLabel>
           <Input
             type="email"
             placeholder="johnDoe@gmail.com"
@@ -75,7 +158,7 @@ const AuthForm = () => {
         </FormControl>
 
         <FormControl id="password">
-          <FormLabel mt="2">Password</FormLabel>
+          <FormLabel mt="2">{isLogin ? "Password" : "New Password"}</FormLabel>
           <Input
             type="password"
             placeholder="*******"
@@ -83,11 +166,30 @@ const AuthForm = () => {
           ></Input>
           <FormHelperText>Enter your password.</FormHelperText>
         </FormControl>
-        <Box mt="2">
-          <Button type="submit" color="facebook.400">
-            Login
-          </Button>
-        </Box>
+
+        <Flex justifyContent="center">
+          <Box mt="2">
+            <Flex
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Button mb="1" type="submit" color="facebook.400">
+                {isLogin ? "Login" : "Create Account"}
+              </Button>
+              <Button
+                mt="1"
+                type="button"
+                color="facebook.400"
+                onClick={authModeHandler}
+              >
+                {isLogin
+                  ? "Create new Account"
+                  : "Log in with Existing Account"}
+              </Button>
+            </Flex>
+          </Box>
+        </Flex>
       </form>
     </Container>
   );
