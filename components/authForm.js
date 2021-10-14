@@ -9,6 +9,7 @@ import {
   Heading,
   Flex,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 
 import { useState, useRef, useContext } from "react";
@@ -133,6 +134,8 @@ const AuthForm = () => {
     }
   };
 
+  // ----------------------------------------------------------------------------
+
   return (
     <Container mt="10">
       <form onSubmit={submitHandler}>
@@ -146,7 +149,8 @@ const AuthForm = () => {
           <FormControl id="username">
             <FormLabel mt="2">Create Username</FormLabel>
             <Input
-              type="username"
+              bg="whiteAlpha.200"
+              type="text"
               placeholder="John"
               ref={enteredDisplayNameRef}
             ></Input>
@@ -159,6 +163,7 @@ const AuthForm = () => {
             {isLogin ? "Email Address" : "New Email address"}
           </FormLabel>
           <Input
+            bg="whiteAlpha.200"
             type="email"
             placeholder="johnDoe@gmail.com"
             ref={enteredEmailRef}
@@ -169,6 +174,7 @@ const AuthForm = () => {
         <FormControl id="password">
           <FormLabel mt="2">{isLogin ? "Password" : "New Password"}</FormLabel>
           <Input
+            bg="whiteAlpha.200"
             type="password"
             placeholder="*******"
             ref={enteredPasswordRef}
@@ -183,9 +189,14 @@ const AuthForm = () => {
               alignItems="center"
               justifyContent="center"
             >
-              <Button mb="1" type="submit" color="facebook.400">
-                {isLogin ? "Login" : "Create Account"}
-              </Button>
+              {isLoading && <Button mb="1" onClick={e => e.stopPropagation()} color="facebook.400" is>
+                Sending... <Spinner />
+              </Button>}
+              {!isLoading && (
+                <Button mb="1" type="submit" color="facebook.400">
+                  {isLogin ? "Login" : "Create Account"}
+                </Button>
+              )}
               <Button
                 mt="1"
                 type="button"
