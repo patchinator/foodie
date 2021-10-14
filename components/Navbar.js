@@ -1,16 +1,35 @@
 import { useContext } from "react";
 
-import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
-import { Menu, MenuList, MenuButton, MenuItem, MenuDivider } from "@chakra-ui/menu";
-import Link from "next/link";
 import AuthContext from "../store/auth-context";
-import { HamburgerIcon, MoonIcon, InfoOutlineIcon, CloseIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import Link from "next/link";
+
+import { Button } from "@chakra-ui/button";
+import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
+import {
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuDivider,
+} from "@chakra-ui/menu";
+import {
+  HamburgerIcon,
+  MoonIcon,
+  InfoOutlineIcon,
+  CloseIcon,
+  EditIcon,
+  SettingsIcon,
+  SunIcon,
+} from "@chakra-ui/icons";
+import { useColorMode } from "@chakra-ui/color-mode";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
   const displayName = authCtx.displayName;
+
+  const { colorMode, toggleColorMode } = useColorMode();
+
   const currentTime = new Date().getTime();
   const currentHours = new Date(currentTime).getHours();
 
@@ -51,17 +70,16 @@ const Navbar = () => {
             >
               {!isLoggedIn && (
                 <ListItem mr="2">
-                  <Link href="/auth/log-in">Login</Link>
-                </ListItem>
-              )}
-              {!isLoggedIn && (
-                <ListItem mr="2">
-                  <Button>Sign up</Button>
+                  <Button>
+                    <Link href="/auth/log-in">Login / Sign Up</Link>
+                  </Button>
                 </ListItem>
               )}
               {isLoggedIn && (
                 <ListItem mr="2">
-                  <Text fontSize="2xl">{displayTimeHandler() + displayName}</Text>
+                  <Text fontSize="2xl">
+                    {displayTimeHandler() + displayName}
+                  </Text>
                 </ListItem>
               )}
             </UnorderedList>
@@ -86,11 +104,12 @@ const Navbar = () => {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
-                  command={<MoonIcon />}
+                  command={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
                   cursor="pointer"
                   _hover={{ bg: "gray.600" }}
+                  onClick={toggleColorMode}
                 >
-                  Nightmode
+                  {colorMode === "light" ? "Nightmode" : "Lightmode"}
                 </MenuItem>
                 <MenuItem
                   command={<InfoOutlineIcon />}
@@ -99,14 +118,16 @@ const Navbar = () => {
                 >
                   About
                 </MenuItem>
-                <MenuItem
-                  command={<CloseIcon />}
-                  cursor="pointer"
-                  _hover={{ bg: "gray.600" }}
-                  onClick={logoutHandler}
-                >
-                  Sign Out
-                </MenuItem>
+                {isLoggedIn && (
+                  <MenuItem
+                    command={<CloseIcon />}
+                    cursor="pointer"
+                    _hover={{ bg: "gray.600" }}
+                    onClick={logoutHandler}
+                  >
+                    Sign Out
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           </Flex>

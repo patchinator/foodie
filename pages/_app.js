@@ -1,15 +1,23 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import { AuthContextProvider } from "../store/auth-context";
+import Head from "next/head";
+import theme from "../styles/theme";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthContextProvider>
-      <ChakraProvider>
-        <Navbar />
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </AuthContextProvider>
+    <>
+      <Head>
+        <title>Foodie | What are you cooking?</title>
+      </Head>
+      <AuthContextProvider>
+        <ChakraProvider>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <Navbar />
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </AuthContextProvider>
+    </>
   );
 }
 
