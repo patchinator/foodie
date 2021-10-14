@@ -71,7 +71,7 @@ const PostForm = () => {
   return (
     <Fragment>
       <Container>
-        <Flex justify="center" align="center" mt="10">
+        <Flex justify="center" align="center" mt="10" mb="10">
           <Box>
             <Button onClick={onOpen}>Post</Button>
           </Box>
