@@ -28,7 +28,7 @@ const PostForm = () => {
   const currentUserEmail = authCtx.email;
   const toast = useToast();
 
-    const FIREBASE_DB = process.env.NEXT_PUBLIC_FIREBASEDB;
+  const FIREBASE_DB = process.env.NEXT_PUBLIC_FIREBASE;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const postInputRef = useRef();
@@ -41,18 +41,15 @@ const PostForm = () => {
 
     if (enteredPost.trim().length !== 0) {
       if (enteredPost.trim().length <= maxChars) {
-        fetch(
-          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts.json?auth=${authCtx.token}`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              user: currentUser,
-              email: currentUserEmail,
-              post: enteredPost,
-              date: new Date(),
-            }),
-          }
-        );
+        fetch(`${FIREBASE_DB}${authCtx.token}`, {
+          method: "POST",
+          body: JSON.stringify({
+            user: currentUser,
+            email: currentUserEmail,
+            post: enteredPost,
+            date: new Date(),
+          }),
+        }).then(onClose);
       } else {
         toast({
           description: "Max characters exceeded",
