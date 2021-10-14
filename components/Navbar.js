@@ -7,7 +7,6 @@ import AuthContext from "../store/auth-context";
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
-  console.log(isLoggedIn)
 
   return (
     <Box>

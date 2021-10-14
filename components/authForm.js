@@ -37,10 +37,10 @@ const AuthForm = () => {
     const enteredEmail = enteredEmailRef.current.value;
     const enteredPassword = enteredPasswordRef.current.value;
 
+    setIsLoading(true);
     let url;
     if (isLogin) {
       url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API}`;
-
       fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -51,6 +51,7 @@ const AuthForm = () => {
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => {
+          setIsLoading(false);
           if (res.ok) {
             return res.json();
           } else {
@@ -64,12 +65,12 @@ const AuthForm = () => {
           }
         })
         .then((data) => {
-          authCtx.login(data.idToken, data.displayName, data.email);
+          authCtx.login(data.idToken);
           router.push("/")
         })
         .catch((error) => {
           toast({
-            description: `${error.message.split("_").join(" ")}`,
+            description: `${error.message.split("_").join(" ").toLowerCase()}`,
             status: "error",
             duration: 4000,
             isClosable: true,
