@@ -1,8 +1,10 @@
 import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
+import { Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/menu";
 import Link from "next/link";
 import { useContext } from "react";
 import AuthContext from "../store/auth-context";
+import { Icon } from "@chakra-ui/icon";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
@@ -64,6 +66,13 @@ const Navbar = () => {
                 </ListItem>
               )}
             </UnorderedList>
+            <Menu>
+              <MenuButton as={Button} rightIcon={}>Menu</MenuButton>
+              <MenuList>
+                <ListItem>Profile</ListItem>
+                <ListItem>Options</ListItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </Box>
       </Flex>
