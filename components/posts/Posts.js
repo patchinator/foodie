@@ -6,7 +6,7 @@ import { Container, Flex } from "@chakra-ui/layout";
 const Posts = (props) => {
   return (
     <Fragment>
-      <Container bg="whiteAlpha.100">
+      <Container>
         <Flex flexDir="column">
           {props.posts.map((post) => (
             <PostCard
