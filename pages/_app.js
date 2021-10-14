@@ -1,5 +1,5 @@
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/UI/Navbar";
 import { AuthContextProvider } from "../store/auth-context";
 import Head from "next/head";
 import theme from "../styles/theme";

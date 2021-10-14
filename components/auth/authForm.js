@@ -14,7 +14,7 @@ import {
 
 import { useState, useRef, useContext } from "react";
 import { useRouter } from "next/dist/client/router";
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 
 const AuthForm = () => {
   const enteredEmailRef = useRef();

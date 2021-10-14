@@ -1,5 +1,5 @@
 import { Fragment, useRef, useContext } from "react";
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 
 import {
   Container,
@@ -81,7 +81,7 @@ const PostForm = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">
-            What are you cooking {currentUser}?
+            What are you cooking, {currentUser}?
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 import Link from "next/link";
 
 import { Button, IconButton } from "@chakra-ui/button";
