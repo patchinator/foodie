@@ -14,6 +14,7 @@ export default function Home() {
       </Head>
       <h1>hello</h1>
       {authCtx.isLoggedIn && <p>Logged in</p>}
+      
     </div>
   );
 }

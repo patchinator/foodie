@@ -1,10 +1,11 @@
+import { useContext } from "react";
+
 import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
-import { Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/menu";
+import { Menu, MenuList, MenuButton, MenuItem, MenuDivider } from "@chakra-ui/menu";
 import Link from "next/link";
-import { useContext } from "react";
 import AuthContext from "../store/auth-context";
-import { Icon } from "@chakra-ui/icon";
+import { HamburgerIcon, MoonIcon, InfoOutlineIcon, CloseIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
@@ -27,6 +28,8 @@ const Navbar = () => {
     authCtx.logout();
   };
 
+  // ---------------------------------------------------------------------------
+
   return (
     <Box>
       <Flex
@@ -35,9 +38,10 @@ const Navbar = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Text>
-          <Link href="/">Foodie</Link>
-        </Text>
+        <Box>
+          {/* <Image width="140" height="100" src={image} alt="foodie logo"></Image> */}
+          <Text>TODO Foodie Logo</Text>
+        </Box>
         <Box>
           <Flex justifyContent="space-evenly" alignItems="center">
             <UnorderedList
@@ -51,26 +55,58 @@ const Navbar = () => {
                 </ListItem>
               )}
               {!isLoggedIn && (
-                <ListItem>
+                <ListItem mr="2">
                   <Button>Sign up</Button>
                 </ListItem>
               )}
               {isLoggedIn && (
                 <ListItem mr="2">
-                  <Text>{displayTimeHandler() + displayName}</Text>
-                </ListItem>
-              )}
-              {isLoggedIn && (
-                <ListItem>
-                  <Button onClick={logoutHandler}>Sign Out</Button>
+                  <Text fontSize="2xl">{displayTimeHandler() + displayName}</Text>
                 </ListItem>
               )}
             </UnorderedList>
             <Menu>
-              <MenuButton as={Button} rightIcon={}>Menu</MenuButton>
-              <MenuList>
-                <ListItem>Profile</ListItem>
-                <ListItem>Options</ListItem>
+              <MenuButton as={Button}>
+                <HamburgerIcon w="6" h="6" />
+              </MenuButton>
+              <MenuList listStyleType="none">
+                <MenuItem
+                  command={<EditIcon />}
+                  cursor="pointer"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  command={<SettingsIcon />}
+                  cursor="pointer"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  Options
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem
+                  command={<MoonIcon />}
+                  cursor="pointer"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  Nightmode
+                </MenuItem>
+                <MenuItem
+                  command={<InfoOutlineIcon />}
+                  cursor="pointer"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  About
+                </MenuItem>
+                <MenuItem
+                  command={<CloseIcon />}
+                  cursor="pointer"
+                  _hover={{ bg: "gray.600" }}
+                  onClick={logoutHandler}
+                >
+                  Sign Out
+                </MenuItem>
               </MenuList>
             </Menu>
           </Flex>
