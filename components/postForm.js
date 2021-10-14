@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormHelperText,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { ChatIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -25,12 +26,13 @@ const PostForm = () => {
   const authCtx = useContext(AuthContext);
   const currentUser = authCtx.displayName;
   const currentUserEmail = authCtx.email;
-  
+  const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const postInputRef = useRef();
-  const maxChars = 150
+  const maxChars = 150;
 
-    const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
+  const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
 
   const submitPostHandler = (event) => {
     event.preventDefault();
@@ -40,11 +42,27 @@ const PostForm = () => {
     if (enteredPost.trim().length !== 0) {
       if (enteredPost.trim().length <= maxChars) {
         fetch(
-          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/`
+          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts.json/auth=${authCtx.token}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              user: currentUser,
+              email: currentUserEmail,
+              post: enteredPost,
+              date: new Date(),
+            }),
+          }
         );
+      } else {
+        toast({
+          description: "Max characters exceeded",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
       }
     }
-  }
+  };
 
   return (
     <Fragment>
@@ -66,6 +84,7 @@ const PostForm = () => {
             <form onSubmit={submitPostHandler}>
               <FormControl id="text">
                 <Textarea
+                  id="text"
                   bg="gray.600"
                   ref={postInputRef}
                   placeholder="I am cooking..."
