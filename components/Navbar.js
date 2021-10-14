@@ -20,7 +20,9 @@ const Navbar = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Text>Foodie</Text>
+        <Text>
+          <Link href="/">Foodie</Link>
+        </Text>
         <Box>
           <Flex justifyContent="space-evenly" alignItems="center">
             <UnorderedList

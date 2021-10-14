@@ -65,8 +65,16 @@ const AuthForm = () => {
           }
         })
         .then((data) => {
-          authCtx.login(data.idToken);
-          router.push("/")
+          const expirationTime = new Date(
+            new Date().getTime() + +data.expiresIn * 1000
+          );
+          authCtx.login(
+            data.idToken,
+            data.email,
+            data.displayName,
+            expirationTime.toISOString()
+          );
+          router.push("/");
         })
         .catch((error) => {
           toast({

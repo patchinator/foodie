@@ -3,7 +3,7 @@ import { useContext } from "react";
 import AuthContext from "../store/auth-context";
 
 export default function Home() {
-  const authCtx = useContext(AuthContext)
+  const authCtx = useContext(AuthContext);
 
   return (
     <div>
@@ -17,4 +17,3 @@ export default function Home() {
     </div>
   );
 }
-
