@@ -7,10 +7,23 @@ import AuthContext from "../store/auth-context";
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
+  const displayName = authCtx.displayName;
+  const currentTime = new Date().getTime();
+  const currentHours = new Date(currentTime).getHours();
+
+  const displayTimeHandler = () => {
+    if (currentHours >= 0 && currentHours < 12) {
+      return "Good morning ";
+    } else if (currentHours >= 12 && currentHours <= 17) {
+      return "Good afternoon ";
+    } else {
+      return "Good evening ";
+    }
+  };
 
   const logoutHandler = () => {
     authCtx.logout();
-  }
+  };
 
   return (
     <Box>
@@ -38,6 +51,11 @@ const Navbar = () => {
               {!isLoggedIn && (
                 <ListItem>
                   <Button>Sign up</Button>
+                </ListItem>
+              )}
+              {isLoggedIn && (
+                <ListItem mr="2">
+                  <Text>{displayTimeHandler() + displayName}</Text>
                 </ListItem>
               )}
               {isLoggedIn && (
