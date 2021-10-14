@@ -8,6 +8,10 @@ const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
 
+  const logoutHandler = () => {
+    authCtx.logout();
+  }
+
   return (
     <Box>
       <Flex
@@ -36,7 +40,7 @@ const Navbar = () => {
               )}
               {isLoggedIn && (
                 <ListItem>
-                  <Button>Sign Out</Button>
+                  <Button onClick={logoutHandler}>Sign Out</Button>
                 </ListItem>
               )}
             </UnorderedList>
