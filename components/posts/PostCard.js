@@ -38,19 +38,22 @@ const PostCard = (props) => {
         <Text>{props.email}</Text>
       </Flex>
       <Box bg="whiteAlpha.900" ml="2" mr="2" borderRadius="lg">
-        <Text mb="2" color="black" p="2">
+        <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1">
           {props.post}
         </Text>
       </Box>
       <Box m="2">
         <Flex justify="space-between">
           <Box>
-            <Button size="sm">comment</Button>
+            <Button size="sm">like</Button>
             <Button ml="2" size="sm">
               share
             </Button>
           </Box>
-          <Button size="sm">reply</Button>
+          <Box>
+            <Button mr="2" size="sm">test</Button>
+            <Button size="sm">reply</Button>
+          </Box>
         </Flex>
       </Box>
     </Box>

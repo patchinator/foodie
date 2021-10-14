@@ -22,6 +22,8 @@ import {
   SunIcon,
 } from "@chakra-ui/icons";
 import { useColorMode } from "@chakra-ui/color-mode";
+import image from "../../images/foodie_logo2.png";
+import Image from "next/image";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
@@ -58,7 +60,7 @@ const Navbar = () => {
         alignItems="center"
       >
         <Box>
-          {/* <Image width="140" height="100" src={image} alt="foodie logo"></Image> */}
+          <Image width="140" height="100" src={image} alt="foodie logo"></Image>
           <Text>TODO Foodie Logo</Text>
         </Box>
         <Box>
