@@ -3,7 +3,7 @@ import { useContext } from "react";
 import AuthContext from "../store/auth-context";
 import Link from "next/link";
 
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
 import {
   Menu,
@@ -84,9 +84,7 @@ const Navbar = () => {
               )}
             </UnorderedList>
             <Menu>
-              <MenuButton as={Button}>
-                <HamburgerIcon w="6" h="6" />
-              </MenuButton>
+              <MenuButton as={IconButton} icon={<HamburgerIcon w="6" h="6" />} />
               <MenuList listStyleType="none">
                 <MenuItem
                   command={<EditIcon />}

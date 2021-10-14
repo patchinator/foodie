@@ -28,11 +28,11 @@ const PostForm = () => {
   const currentUserEmail = authCtx.email;
   const toast = useToast();
 
+    const FIREBASE_DB = process.env.NEXT_PUBLIC_FIREBASEDB;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const postInputRef = useRef();
   const maxChars = 150;
-
-  const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
 
   const submitPostHandler = (event) => {
     event.preventDefault();
@@ -42,7 +42,7 @@ const PostForm = () => {
     if (enteredPost.trim().length !== 0) {
       if (enteredPost.trim().length <= maxChars) {
         fetch(
-          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts.json/auth=${authCtx.token}`,
+          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts.json?auth=${authCtx.token}`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -61,6 +61,13 @@ const PostForm = () => {
           isClosable: true,
         });
       }
+    } else {
+      toast({
+        description: "Post must have at least 1 character",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     }
   };
 
