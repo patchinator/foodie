@@ -14,6 +14,10 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const toast = useToast();
 
+  const refreshPostsHandler = () => {
+    setRefresh(Math.random());
+  };
+
   useEffect(() => {
     fetch(`${FIREBASE_DB}${authCtx.token}`)
       .then((res) => {
@@ -54,8 +58,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Background>
-        {isLoggedIn && <PostForm />}
-        {isLoggedIn && <Posts posts={posts} />}
+        {isLoggedIn && <PostForm onRefresh={refreshPostsHandler} />}
+        {isLoggedIn && <Posts onRefresh={refreshPostsHandler} posts={posts} />}
       </Background>
     </Fragment>
   );

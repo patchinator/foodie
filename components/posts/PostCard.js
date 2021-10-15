@@ -10,8 +10,14 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/accordion";
+import { useToast } from "@chakra-ui/toast";
+import { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 
 const PostCard = (props) => {
+  const toast = useToast();
+  const authCtx = useContext(AuthContext)
+
   const months = [
     "Jan",
     "Feb",
@@ -36,6 +42,34 @@ const PostCard = (props) => {
   const postYear = postDate.getFullYear();
 
   const themeColor = useColorModeValue("green.300", "gray.800");
+
+  const deletePostHandler = () => {
+    fetch(
+      `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts/${props.id}.json?auth=${authCtx.token}`,
+      {
+        method: "DELETE",
+      }
+    ).then((res) => {
+      if (res.ok) {
+        props.onRefresh();
+        toast({
+          description: "Post succesfully removed",
+          position: "top",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          description: "Unable to remove post",
+          position: "top",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    });
+  };
 
   return (
     <Flex justify="center">
@@ -65,7 +99,12 @@ const PostCard = (props) => {
               <Button size="sm" mr="2" colorScheme="blue">
                 Edit
               </Button>
-              <IconButton size="sm" colorScheme="red" icon={<DeleteIcon />} />
+              <IconButton
+                onClick={deletePostHandler}
+                size="sm"
+                colorScheme="red"
+                icon={<DeleteIcon />}
+              />
             </Box>
           </Flex>
           <Flex>
@@ -98,7 +137,7 @@ const PostCard = (props) => {
           </form>
           <Accordion mt="2" allowToggle>
             <AccordionItem>
-              <AccordionButton _hover="gray.100">
+              <AccordionButton>
                 <ChevronDownIcon />
               </AccordionButton>
               <AccordionPanel></AccordionPanel>

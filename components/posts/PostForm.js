@@ -23,7 +23,7 @@ import {
 import { useDisclosure } from "@chakra-ui/hooks";
 import { ChatIcon, PlusSquareIcon } from "@chakra-ui/icons";
 
-const PostForm = () => {
+const PostForm = (props) => {
   const authCtx = useContext(AuthContext);
   const currentUser = authCtx.displayName;
   const currentUserEmail = authCtx.email;
@@ -50,7 +50,7 @@ const PostForm = () => {
             post: enteredPost,
             date: new Date(),
           }),
-        }).then(onClose);
+        }).then(props.onRefresh).then(onClose)
       } else {
         toast({
           description: "Max characters exceeded",
