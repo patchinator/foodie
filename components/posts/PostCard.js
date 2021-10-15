@@ -2,8 +2,6 @@ import { Box, Text, Flex } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 
 const PostCard = (props) => {
-  const showTime = () => {};
-
   const months = [
     "Jan",
     "Feb",

@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <Box>
       <Flex
-        bg={colorMode === "light" ? "green.200" : "gray.700" }
+        bg={colorMode === "light" ? "green.400" : "gray.700" }
         p="2"
         justifyContent="space-between"
         alignItems="center"
