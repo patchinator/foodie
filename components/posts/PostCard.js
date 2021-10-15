@@ -1,6 +1,9 @@
-import { Box, Text, Flex } from "@chakra-ui/layout";
+import { Box, Text, Flex, Divider } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { Input } from "@chakra-ui/input";
+import { color } from "@chakra-ui/styled-system";
 
 const PostCard = (props) => {
   const months = [
@@ -26,40 +29,63 @@ const PostCard = (props) => {
   const postMonth = postDate.getMonth();
   const postYear = postDate.getFullYear();
 
-  const cardColor = useColorModeValue("green.200", "gray.800");
+  const themeColor = useColorModeValue("green.300", "gray.800");
 
   return (
-    <Box bg={cardColor} m="1" borderRadius="lg">
-      <Flex m="2" justify="space-between">
-        <Text>
-          {props.user} on {days[postWeekDay]} {postDay}
-          {months[postMonth] + " "}
-          {postYear}
-        </Text>
-        <Text>{props.email}</Text>
-      </Flex>
-      <Box bg="whiteAlpha.900" ml="2" mr="2" borderRadius="lg">
-        <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1">
-          {props.post}
-        </Text>
-      </Box>
-      <Box m="2">
-        <Flex justify="space-between">
-          <Box>
-            <Button size="sm">like</Button>
-            <Button ml="2" size="sm">
-              share
-            </Button>
-          </Box>
-          <Box>
-            <Button mr="2" size="sm">
-              test
-            </Button>
-            <Button size="sm">reply</Button>
-          </Box>
+    <Flex justify="center">
+      <Box bg={themeColor} mb="4" borderRadius="lg" width="40%" boxShadow="lg">
+        <Flex m="2" justify="space-between">
+          <Text fontWeight="bold">
+            {props.user} on {days[postWeekDay]} {postDay}
+            {months[postMonth] + " "}
+            {postYear}
+          </Text>
+          <Text>{props.email}</Text>
         </Flex>
+        <Box bg={useColorModeValue("green.100", "whiteAlpha.900")}>
+          <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1">
+            {props.post}
+          </Text>
+        </Box>
+        <Box m="2">
+          <Flex justify="space-between">
+            <Box>
+              <Button size="sm">like</Button>
+              <Button ml="2" size="sm">
+                share
+              </Button>
+            </Box>
+            <Button size="sm">test</Button>
+          </Flex>
+          <Flex>
+            <Divider mb="2" mt="2" />
+          </Flex>
+          <form>
+            <FormControl>
+              <FormLabel></FormLabel>
+              <Flex align="center" justify="space-between">
+                <Box
+                  w="40px"
+                  h="40px"
+                  bg={useColorModeValue("white", "gray.600")}
+                  borderRadius="full"
+                ></Box>
+                <Input
+                  focusBorderColor={useColorModeValue("green.500", "gray.500")}
+                  color="black"
+                  _placeholder={{ color: useColorModeValue("gray.400", "gray.200") }}
+                  placeholder="Write a comment..."
+                  borderRadius="3xl"
+                  width="80%"
+                  bg={useColorModeValue("white", "gray.400")}
+                ></Input>
+                <Button borderRadius="3xl">Comment</Button>
+              </Flex>
+            </FormControl>
+          </form>
+        </Box>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

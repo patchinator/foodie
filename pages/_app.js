@@ -4,7 +4,6 @@ import { AuthContextProvider } from "../store/auth-context";
 import Head from "next/head";
 import theme from "../styles/theme";
 import "../styles/globals.css";
-import Background from "../styles/Background";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -15,10 +14,8 @@ function MyApp({ Component, pageProps }) {
       <AuthContextProvider>
         <ChakraProvider>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <Background>
             <Navbar />
             <Component {...pageProps} />
-          </Background>
         </ChakraProvider>
       </AuthContextProvider>
     </>

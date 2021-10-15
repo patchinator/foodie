@@ -6,7 +6,7 @@ const Background = (props) => {
   return (
     <Box
       bgGradient={useColorModeValue(
-        "linear(to-r,green.200,white,green.200)",
+        "linear(to-r,green.100,white,green.100)",
         "linear(to-r,gray.800,gray.600,gray.800)"
       )}
       minH="100%"

@@ -25,11 +25,13 @@ import { useColorMode } from "@chakra-ui/color-mode";
 import logo_black from "../../images/foodie_logo_black.png";
 import logo_white from "../../images/foodie_logo_white.png";
 import Image from "next/image";
+import { useRouter } from "next/dist/client/router";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
   const displayName = authCtx.displayName;
+  const router = useRouter();
 
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -48,6 +50,7 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     authCtx.logout();
+    router.push("/auth/log-in/")
   };
 
   // ---------------------------------------------------------------------------
@@ -70,7 +73,7 @@ const Navbar = () => {
             ></Image>
           </Flex>
         </Box>
-        <Box>
+        <Box position="sticky" top="0">
           <Flex justifyContent="space-evenly" alignItems="center">
             <UnorderedList
               listStyleType="none"
