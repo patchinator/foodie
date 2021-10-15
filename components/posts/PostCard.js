@@ -1,9 +1,15 @@
 import { Box, Text, Flex, Divider } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { color } from "@chakra-ui/styled-system";
+import { ChevronDownIcon, DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+} from "@chakra-ui/accordion";
 
 const PostCard = (props) => {
   const months = [
@@ -55,7 +61,12 @@ const PostCard = (props) => {
                 share
               </Button>
             </Box>
-            <Button size="sm">test</Button>
+            <Box>
+              <Button size="sm" mr="2" colorScheme="blue">
+                Edit
+              </Button>
+              <IconButton size="sm" colorScheme="red" icon={<DeleteIcon />} />
+            </Box>
           </Flex>
           <Flex>
             <Divider mb="2" mt="2" />
@@ -73,7 +84,9 @@ const PostCard = (props) => {
                 <Input
                   focusBorderColor={useColorModeValue("green.500", "gray.500")}
                   color="black"
-                  _placeholder={{ color: useColorModeValue("gray.400", "gray.200") }}
+                  _placeholder={{
+                    color: useColorModeValue("gray.400", "gray.200"),
+                  }}
                   placeholder="Write a comment..."
                   borderRadius="3xl"
                   width="80%"
@@ -83,6 +96,14 @@ const PostCard = (props) => {
               </Flex>
             </FormControl>
           </form>
+          <Accordion mt="2" allowToggle>
+            <AccordionItem>
+              <AccordionButton _hover="gray.100">
+                <ChevronDownIcon />
+              </AccordionButton>
+              <AccordionPanel></AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </Box>
       </Box>
     </Flex>
