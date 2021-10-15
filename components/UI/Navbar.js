@@ -22,7 +22,8 @@ import {
   SunIcon,
 } from "@chakra-ui/icons";
 import { useColorMode } from "@chakra-ui/color-mode";
-import image from "../../images/foodie_logo2.png";
+import logo_black from "../../images/foodie_logo_black.png";
+import logo_white from "../../images/foodie_logo_white.png";
 import Image from "next/image";
 
 const Navbar = () => {
@@ -54,14 +55,20 @@ const Navbar = () => {
   return (
     <Box>
       <Flex
-        bg="facebook.400"
+        bg={colorMode === "light" ? "green.200" : "gray.700" }
         p="2"
         justifyContent="space-between"
         alignItems="center"
       >
         <Box>
-          <Image width="140" height="100" src={image} alt="foodie logo"></Image>
-          <Text>TODO Foodie Logo</Text>
+          <Flex justify="center" align="center">
+            <Image
+              width="250"
+              height="75"
+              src={colorMode === "light" ? logo_black : logo_white}
+              alt="foodie logo"
+            ></Image>
+          </Flex>
         </Box>
         <Box>
           <Flex justifyContent="space-evenly" alignItems="center">
@@ -86,7 +93,10 @@ const Navbar = () => {
               )}
             </UnorderedList>
             <Menu>
-              <MenuButton as={IconButton} icon={<HamburgerIcon w="6" h="6" />} />
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon w="6" h="6" />}
+              />
               <MenuList listStyleType="none">
                 <MenuItem
                   command={<EditIcon />}
