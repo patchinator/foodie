@@ -15,6 +15,7 @@ import {
 import { useState, useRef, useContext } from "react";
 import { useRouter } from "next/dist/client/router";
 import AuthContext from "../../store/auth-context";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 
 const AuthForm = () => {
   const enteredEmailRef = useRef();
@@ -25,6 +26,7 @@ const AuthForm = () => {
   const router = useRouter();
   const authCtx = useContext(AuthContext);
   const toast = useToast();
+  const blackWhite = useColorModeValue("black", "white");
 
   const FIREBASE_API = process.env.NEXT_PUBLIC_FIREBASEDB;
 
@@ -189,18 +191,25 @@ const AuthForm = () => {
               alignItems="center"
               justifyContent="center"
             >
-              {isLoading && <Button mb="1" onClick={e => e.stopPropagation()} color="facebook.400" is>
-                Sending... <Spinner />
-              </Button>}
+              {isLoading && (
+                <Button
+                  mb="1"
+                  onClick={(e) => e.stopPropagation()}
+                  color={blackWhite}
+                  is
+                >
+                  Sending... <Spinner />
+                </Button>
+              )}
               {!isLoading && (
-                <Button mb="1" type="submit" color="facebook.400">
+                <Button mb="1" type="submit" color={blackWhite}>
                   {isLogin ? "Login" : "Create Account"}
                 </Button>
               )}
               <Button
                 mt="1"
                 type="button"
-                color="facebook.400"
+                color={blackWhite}
                 onClick={authModeHandler}
               >
                 {isLogin

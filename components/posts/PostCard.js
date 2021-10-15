@@ -1,5 +1,6 @@
 import { Box, Text, Flex } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 
 const PostCard = (props) => {
   const months = [
@@ -25,8 +26,10 @@ const PostCard = (props) => {
   const postMonth = postDate.getMonth();
   const postYear = postDate.getFullYear();
 
+  const cardColor = useColorModeValue("green.200", "gray.800");
+
   return (
-    <Box bg="facebook.400" m="1" borderRadius="lg">
+    <Box bg={cardColor} m="1" borderRadius="lg">
       <Flex m="2" justify="space-between">
         <Text>
           {props.user} on {days[postWeekDay]} {postDay}
@@ -49,7 +52,9 @@ const PostCard = (props) => {
             </Button>
           </Box>
           <Box>
-            <Button mr="2" size="sm">test</Button>
+            <Button mr="2" size="sm">
+              test
+            </Button>
             <Button size="sm">reply</Button>
           </Box>
         </Flex>

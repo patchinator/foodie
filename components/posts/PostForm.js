@@ -1,6 +1,7 @@
 import { Fragment, useRef, useContext } from "react";
 import AuthContext from "../../store/auth-context";
 
+import { useColorModeValue } from "@chakra-ui/color-mode";
 import {
   Container,
   Box,
@@ -71,7 +72,7 @@ const PostForm = () => {
   return (
     <Fragment>
       <Container>
-        <Flex justify="center" align="center" mt="10" mb="10">
+        <Flex justify="center" align="center" pt="10" pb="10">
           <Box>
             <Button onClick={onOpen}>Post</Button>
           </Box>
@@ -79,7 +80,7 @@ const PostForm = () => {
       </Container>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg={useColorModeValue("green.200", "gray.600")}>
           <ModalHeader textAlign="center">
             What are you cooking, {currentUser}?
           </ModalHeader>
@@ -89,7 +90,7 @@ const PostForm = () => {
               <FormControl id="text">
                 <Textarea
                   id="text"
-                  bg="gray.600"
+                  bg={useColorModeValue("white", "gray.500")}
                   ref={postInputRef}
                   placeholder="I am cooking..."
                 ></Textarea>
