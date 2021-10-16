@@ -33,7 +33,7 @@ const PostForm = (props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const postInputRef = useRef();
-  const maxChars = 150;
+  const maxChars = 500;
 
   const submitPostHandler = (event) => {
     event.preventDefault();

@@ -11,12 +11,12 @@ import {
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import { useToast } from "@chakra-ui/toast";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import AuthContext from "../../store/auth-context";
 
 const PostCard = (props) => {
   const toast = useToast();
-  const authCtx = useContext(AuthContext)
+  const authCtx = useContext(AuthContext);
 
   const months = [
     "Jan",
@@ -71,6 +71,49 @@ const PostCard = (props) => {
     });
   };
 
+  const enteredCommentRef = useRef();
+  const maxChars = 500;
+
+  const submitCommentHandler = (event) => {
+    event.preventDefault();
+
+    const enteredComment = enteredCommentRef.current.value;
+    const currentUser = authCtx.displayName;
+    const currentUserEmail = authCtx.email;
+
+    if (enteredComment.trim().length >= 1) {
+      if (enteredComment.trim().length <= maxChars) {
+        fetch(
+          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts/${props.id}/comments.json?auth=${authCtx.token}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              comment: enteredComment,
+              user: currentUser,
+              email: currentUserEmail,
+              date: new Date(),
+            }),
+            headers: { "Content-Tpye": "application/json" }
+          }
+        ).then(props.onRefresh)
+      } else {
+        toast({
+          description: "Max characters exceeded",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        description: "Comment must have at least 1 character",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Flex justify="center">
       <Box bg={themeColor} mb="4" borderRadius="lg" width="40%" boxShadow="lg">
@@ -95,24 +138,18 @@ const PostCard = (props) => {
                 share
               </Button>
             </Box>
-            <Box>
-              <Button size="sm" mr="2" colorScheme="blue">
-                Edit
-              </Button>
-              <IconButton
-                onClick={deletePostHandler}
-                size="sm"
-                colorScheme="red"
-                icon={<DeleteIcon />}
-              />
-            </Box>
+            <IconButton
+              onClick={deletePostHandler}
+              size="sm"
+              colorScheme="red"
+              icon={<DeleteIcon />}
+            />
           </Flex>
           <Flex>
             <Divider mb="2" mt="2" />
           </Flex>
-          <form>
-            <FormControl>
-              <FormLabel></FormLabel>
+          <form onSubmit={submitCommentHandler}>
+            <FormControl id="text">
               <Flex align="center" justify="space-between">
                 <Box
                   w="40px"
@@ -121,6 +158,8 @@ const PostCard = (props) => {
                   borderRadius="full"
                 ></Box>
                 <Input
+                  type="text"
+                  ref={enteredCommentRef}
                   focusBorderColor={useColorModeValue("green.500", "gray.500")}
                   color="black"
                   _placeholder={{
@@ -131,7 +170,9 @@ const PostCard = (props) => {
                   width="80%"
                   bg={useColorModeValue("white", "gray.400")}
                 ></Input>
-                <Button borderRadius="3xl">Comment</Button>
+                <Button type="submit" borderRadius="3xl">
+                  Comment
+                </Button>
               </Flex>
             </FormControl>
           </form>
