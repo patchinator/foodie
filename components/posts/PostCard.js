@@ -3,7 +3,7 @@ import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { ChevronDownIcon, DeleteIcon, SmallAddIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionButton,
@@ -19,6 +19,10 @@ const PostCard = (props) => {
   const authCtx = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   const [refreshComments, setRefreshComments] = useState(0);
+
+  const refreshCommentsHandler = () => {
+    setRefreshComments(Math.random());
+  };
 
   const months = [
     "Jan",
@@ -45,7 +49,6 @@ const PostCard = (props) => {
 
   const themeColor = useColorModeValue("green.300", "gray.800");
   const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
-
 
   const deletePostHandler = () => {
     fetch(
@@ -100,7 +103,7 @@ const PostCard = (props) => {
             }),
             headers: { "Content-Tpye": "application/json" },
           }
-        ).then(props.onRefresh);
+        ).then(refreshCommentsHandler);
       } else {
         toast({
           description: "Max characters exceeded",
@@ -143,7 +146,9 @@ const PostCard = (props) => {
         }
         setComments(loadedComments);
       });
-  }, []);
+  }, [refreshComments]);
+
+  const commentLength = comments.filter((post) => post.postId === props.id);
 
   return (
     <Flex justify="center">
@@ -210,7 +215,10 @@ const PostCard = (props) => {
           <Accordion mt="2" allowToggle>
             <AccordionItem>
               <AccordionButton>
-                <ChevronDownIcon />
+                <Box flex="1" textAlign="left">
+                  {commentLength.length} {commentLength.length > 1 ? "comments" : "comment"}
+                  <ChevronDownIcon />
+                </Box>
               </AccordionButton>
               <AccordionPanel>
                 <List>

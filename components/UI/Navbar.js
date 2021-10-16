@@ -73,7 +73,7 @@ const Navbar = () => {
             ></Image>
           </Flex>
         </Box>
-        <Box position="sticky" top="0">
+        <Box>
           <Flex justifyContent="space-evenly" alignItems="center">
             <UnorderedList
               listStyleType="none"
