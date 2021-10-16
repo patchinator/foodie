@@ -200,12 +200,12 @@ const PostCard = (props) => {
                 share
               </Button>
             </Box>
-            <IconButton
+            {authCtx.displayName === props.user && <IconButton
               onClick={deletePostHandler}
               size="sm"
               colorScheme="red"
               icon={<DeleteIcon />}
-            />
+            />}
           </Flex>
           <Flex>
             <Divider mb="2" mt="2" />
