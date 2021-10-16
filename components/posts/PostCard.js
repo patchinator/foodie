@@ -13,6 +13,7 @@ import {
 import { useToast } from "@chakra-ui/toast";
 import { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
+import { Avatar } from "@chakra-ui/avatar";
 
 const PostCard = (props) => {
   const toast = useToast();
@@ -78,7 +79,7 @@ const PostCard = (props) => {
     });
   };
 
-  const enteredCommentRef = useRef();
+  const enteredCommentRef = useRef("");
   const maxChars = 500;
 
   const submitCommentHandler = (event) => {
@@ -106,7 +107,8 @@ const PostCard = (props) => {
         ).then(refreshCommentsHandler);
       } else {
         toast({
-          description: "Max characters exceeded",
+          description: "Max characters exceeded.",
+          position: "top",
           status: "error",
           duration: 4000,
           isClosable: true,
@@ -114,7 +116,8 @@ const PostCard = (props) => {
       }
     } else {
       toast({
-        description: "Comment must have at least 1 character",
+        description: "Comments must have at least 1 character.",
+        position: "top",
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -150,15 +153,38 @@ const PostCard = (props) => {
 
   const commentLength = comments.filter((post) => post.postId === props.id);
 
+  // console.log(props.user)
+
   return (
     <Flex justify="center">
       <Box bg={themeColor} mb="4" borderRadius="lg" width="40%" boxShadow="lg">
         <Flex m="2" justify="space-between">
-          <Text fontWeight="bold">
-            {props.user} on {days[postWeekDay]} {postDay}
-            {months[postMonth] + " "}
-            {postYear}
-          </Text>
+          <Box>
+            <Flex>
+              <Box mr="5">
+                <Avatar size="xs" mr="1" position="absolute" />
+                <Box
+                  position="relative"
+                  top="4"
+                  left="4"
+                  w="3"
+                  h="3"
+                  bg={
+                    authCtx.displayName === props.user ? "green.300" : "red.400"
+                  }
+                  border="solid"
+                  borderWidth="thin"
+                  borderColor="black"
+                  borderRadius="full"
+                ></Box>
+              </Box>
+              <Text fontWeight="bold">
+                {props.user} on {days[postWeekDay]} {postDay}
+                {months[postMonth] + " "}
+                {postYear}
+              </Text>
+            </Flex>
+          </Box>
           <Text>{props.email}</Text>
         </Flex>
         <Box bg={useColorModeValue("green.100", "whiteAlpha.900")}>
@@ -187,13 +213,23 @@ const PostCard = (props) => {
           <form onSubmit={submitCommentHandler}>
             <FormControl id="text">
               <Flex align="center" justify="space-between">
+                <Avatar size="sm" position="relative" />
                 <Box
-                  w="40px"
-                  h="40px"
-                  bg={useColorModeValue("white", "gray.600")}
+                  position="absolute"
+                  bottom="0"
+                  left="5"
+                  w="3"
+                  h="3"
+                  bg="green.300"
+                  border="solid"
+                  borderWidth="thin"
+                  borderColor="black"
                   borderRadius="full"
                 ></Box>
                 <Input
+                  ml="1"
+                  mr="1"
+                  height="8"
                   type="text"
                   ref={enteredCommentRef}
                   focusBorderColor={useColorModeValue("green.500", "gray.500")}
@@ -206,7 +242,7 @@ const PostCard = (props) => {
                   width="80%"
                   bg={useColorModeValue("white", "gray.400")}
                 ></Input>
-                <Button type="submit" borderRadius="3xl">
+                <Button type="submit" height="9" borderRadius="3xl">
                   Comment
                 </Button>
               </Flex>
@@ -216,7 +252,8 @@ const PostCard = (props) => {
             <AccordionItem>
               <AccordionButton>
                 <Box flex="1" textAlign="left">
-                  {commentLength.length} {commentLength.length > 1 ? "comments" : "comment"}
+                  {commentLength.length}{" "}
+                  {commentLength.length > 1 ? "comments" : "comment"}
                   <ChevronDownIcon />
                 </Box>
               </AccordionButton>
