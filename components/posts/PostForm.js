@@ -50,7 +50,9 @@ const PostForm = (props) => {
             post: enteredPost,
             date: new Date(),
           }),
-        }).then(props.onRefresh).then(onClose)
+        })
+          .then(props.onRefresh)
+          .then(onClose);
       } else {
         toast({
           description: "Max characters exceeded",

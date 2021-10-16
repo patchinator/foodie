@@ -9,7 +9,7 @@ import Background from "../styles/Background";
 export default function Home() {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
-  const FIREBASE_DB = process.env.NEXT_PUBLIC_FIREBASE;
+  const FIREBASE_DB_POSTS = process.env.NEXT_PUBLIC_FIREBASE;
   const [refresh, setRefresh] = useState(0);
   const [posts, setPosts] = useState([]);
   const toast = useToast();
@@ -19,7 +19,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch(`${FIREBASE_DB}${authCtx.token}`)
+    fetch(`${FIREBASE_DB_POSTS}${authCtx.token}`)
       .then((res) => {
         if (res.ok) {
           return res.json();

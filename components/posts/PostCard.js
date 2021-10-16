@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Divider } from "@chakra-ui/layout";
+import { Box, Text, Flex, Divider, List, ListItem } from "@chakra-ui/layout";
 import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -11,12 +11,14 @@ import {
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import { useToast } from "@chakra-ui/toast";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
 
 const PostCard = (props) => {
   const toast = useToast();
   const authCtx = useContext(AuthContext);
+  const [comments, setComments] = useState([]);
+  const [refreshComments, setRefreshComments] = useState(0);
 
   const months = [
     "Jan",
@@ -42,6 +44,8 @@ const PostCard = (props) => {
   const postYear = postDate.getFullYear();
 
   const themeColor = useColorModeValue("green.300", "gray.800");
+  const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
+
 
   const deletePostHandler = () => {
     fetch(
@@ -84,18 +88,19 @@ const PostCard = (props) => {
     if (enteredComment.trim().length >= 1) {
       if (enteredComment.trim().length <= maxChars) {
         fetch(
-          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts/${props.id}/comments.json?auth=${authCtx.token}`,
+          `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/comments.json?auth=${authCtx.token}`,
           {
             method: "POST",
             body: JSON.stringify({
               comment: enteredComment,
-              user: currentUser,
-              email: currentUserEmail,
-              date: new Date(),
+              commentUser: currentUser,
+              commentEmail: currentUserEmail,
+              commentDate: new Date(),
+              postId: props.id,
             }),
-            headers: { "Content-Tpye": "application/json" }
+            headers: { "Content-Tpye": "application/json" },
           }
-        ).then(props.onRefresh)
+        ).then(props.onRefresh);
       } else {
         toast({
           description: "Max characters exceeded",
@@ -113,6 +118,32 @@ const PostCard = (props) => {
       });
     }
   };
+
+  useEffect(() => {
+    fetch(
+      `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/comments.json?auth=${authCtx.token}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error();
+      })
+      .then((data) => {
+        const loadedComments = [];
+        for (const key in data) {
+          loadedComments.push({
+            commentUser: data[key].commentUser,
+            commentEmail: data[key].commentEmail,
+            comment: data[key].comment,
+            commentDate: data[key].commentDate,
+            postId: data[key].postId,
+            id: key,
+          });
+        }
+        setComments(loadedComments);
+      });
+  }, []);
 
   return (
     <Flex justify="center">
@@ -181,7 +212,26 @@ const PostCard = (props) => {
               <AccordionButton>
                 <ChevronDownIcon />
               </AccordionButton>
-              <AccordionPanel></AccordionPanel>
+              <AccordionPanel>
+                <List>
+                  {comments
+                    .filter((post) => post.postId === props.id)
+                    .map((comment) => (
+                      <ListItem key={comment.id}>
+                        <Box>
+                          <Flex justify="space-between">
+                            <Text>{comment.commentUser}</Text>
+                            <Text>{comment.commentDate}</Text>
+                          </Flex>
+                        </Box>
+                        <Box p="1" bg={inputColor} borderRadius="lg">
+                          <Text color="black">{comment.comment}</Text>
+                        </Box>
+                        <Divider m="2" />
+                      </ListItem>
+                    ))}
+                </List>
+              </AccordionPanel>
             </AccordionItem>
           </Accordion>
         </Box>
