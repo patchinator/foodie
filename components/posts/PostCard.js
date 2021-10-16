@@ -179,7 +179,7 @@ const PostCard = (props) => {
                 ></Box>
               </Box>
               <Text fontWeight="bold">
-                {props.user} on {days[postWeekDay]} {postDay}
+                {props.user} on {days[postWeekDay]} {postDay}-
                 {months[postMonth] + " "}
                 {postYear}
               </Text>
