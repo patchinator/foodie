@@ -13,7 +13,7 @@ import {
 import { useToast } from "@chakra-ui/toast";
 import { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
-import { Avatar } from "@chakra-ui/avatar";
+import { Avatar, AvatarBadge } from "@chakra-ui/avatar";
 
 const PostCard = (props) => {
   const toast = useToast();
@@ -161,23 +161,15 @@ const PostCard = (props) => {
         <Flex m="2" justify="space-between">
           <Box>
             <Flex>
-              <Box mr="5">
-                <Avatar size="xs" mr="1" position="absolute" />
-                <Box
-                  position="relative"
-                  top="4"
-                  left="4"
-                  w="3"
-                  h="3"
+              <Avatar name={props.user} size="xs" mr="3">
+                <AvatarBadge
+                  borderColor="black"
                   bg={
                     authCtx.displayName === props.user ? "green.300" : "red.400"
                   }
-                  border="solid"
-                  borderWidth="thin"
-                  borderColor="black"
-                  borderRadius="full"
-                ></Box>
-              </Box>
+                  boxSize="1.25em"
+                />
+              </Avatar>
               <Text fontWeight="bold">
                 {props.user} on {days[postWeekDay]} {postDay}-
                 {months[postMonth] + " "}
@@ -188,7 +180,7 @@ const PostCard = (props) => {
           <Text>{props.email}</Text>
         </Flex>
         <Box bg={useColorModeValue("green.100", "whiteAlpha.900")}>
-          <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1">
+          <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1" whiteSpace="pre-wrap">
             {props.post}
           </Text>
         </Box>
@@ -200,12 +192,14 @@ const PostCard = (props) => {
                 share
               </Button>
             </Box>
-            {authCtx.displayName === props.user && <IconButton
-              onClick={deletePostHandler}
-              size="sm"
-              colorScheme="red"
-              icon={<DeleteIcon />}
-            />}
+            {authCtx.displayName === props.user && (
+              <IconButton
+                onClick={deletePostHandler}
+                size="sm"
+                colorScheme="red"
+                icon={<DeleteIcon />}
+              />
+            )}
           </Flex>
           <Flex>
             <Divider mb="2" mt="2" />
@@ -213,19 +207,19 @@ const PostCard = (props) => {
           <form onSubmit={submitCommentHandler}>
             <FormControl id="text">
               <Flex align="center" justify="space-between">
-                <Avatar size="sm" position="relative" />
-                <Box
-                  position="absolute"
-                  bottom="0"
-                  left="5"
-                  w="3"
-                  h="3"
-                  bg="green.300"
-                  border="solid"
-                  borderWidth="thin"
-                  borderColor="black"
-                  borderRadius="full"
-                ></Box>
+                <Avatar
+                  name={authCtx.displayName}
+                  size="sm"
+                  position="relative"
+                >
+                  <AvatarBadge
+                    borderWidth="thin"
+                    borderColor="black"
+                    bg="green.300"
+                    boxSize="1.1em"
+                  />
+                </Avatar>
+
                 <Input
                   ml="1"
                   mr="1"
@@ -253,7 +247,7 @@ const PostCard = (props) => {
               <AccordionButton>
                 <Box flex="1" textAlign="left">
                   {commentLength.length}{" "}
-                  {commentLength.length > 1 ? "comments" : "comment"}
+                  {commentLength.length !== 1 ? "comments " : "comment "}
                   <ChevronDownIcon />
                 </Box>
               </AccordionButton>
