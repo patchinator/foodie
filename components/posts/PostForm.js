@@ -1,4 +1,4 @@
-import { Fragment, useRef, useContext } from "react";
+import { Fragment, useRef, useContext, useState } from "react";
 import AuthContext from "../../store/auth-context";
 
 import { useColorModeValue } from "@chakra-ui/color-mode";
@@ -19,9 +19,15 @@ import {
   FormHelperText,
   Textarea,
   useToast,
+  Accordion,
+  AccordionPanel,
+  AccordionItem,
+  AccordionButton,
+  Input,
+  Text,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { ChatIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { ChatIcon, PlusSquareIcon, LinkIcon } from "@chakra-ui/icons";
 
 const PostForm = (props) => {
   const authCtx = useContext(AuthContext);
@@ -29,16 +35,21 @@ const PostForm = (props) => {
   const currentUserEmail = authCtx.email;
   const toast = useToast();
 
+  
   const FIREBASE_DB = process.env.NEXT_PUBLIC_FIREBASE;
-
+  
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const postInputRef = useRef();
+  const enteredInputRef = useRef();
+  const enteredImageRef = useRef();
+  const enteredLinkRef = useRef();
   const maxChars = 500;
 
   const submitPostHandler = (event) => {
     event.preventDefault();
 
-    const enteredPost = postInputRef.current.value;
+    const enteredPost = enteredInputRef.current.value;
+    const enteredImage = enteredImageRef.current.value;
+    const enteredLink = enteredLinkRef.current.value;
 
     if (enteredPost.trim().length !== 0) {
       if (enteredPost.trim().length <= maxChars) {
@@ -49,6 +60,8 @@ const PostForm = (props) => {
             email: currentUserEmail,
             post: enteredPost,
             date: new Date(),
+            image: enteredImage,
+            link: enteredLink,
           }),
         })
           .then(props.onRefresh)
@@ -93,21 +106,62 @@ const PostForm = (props) => {
                 <Textarea
                   id="text"
                   bg={useColorModeValue("white", "gray.500")}
-                  ref={postInputRef}
+                  ref={enteredInputRef}
                   placeholder="I am cooking..."
                 ></Textarea>
-                <FormHelperText>150 chars max</FormHelperText>
+                <FormHelperText>500 chars max</FormHelperText>
               </FormControl>
               <Flex flexDir="row-reverse">
                 <Button type="submit" rightIcon={<ChatIcon />}>
                   Post
                 </Button>
-                <Button type="button" mr="2" rightIcon={<PlusSquareIcon />}>
-                  Add image
-                </Button>
               </Flex>
             </form>
           </ModalBody>
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionButton>
+                <Box textAlign="left" flex="1">
+                  Attach an image
+                </Box>
+                <PlusSquareIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                <FormControl>
+                  <Input
+                    ref={enteredImageRef}
+                    cursor="grab"
+                    placeholder="https://something.com"
+                    bg="gray.500"
+                    borderRadius="2xl"
+                    textColor="black"
+                  ></Input>
+                  <FormHelperText>Paste your image here.</FormHelperText>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionButton>
+                <Box textAlign="left" flex="1">
+                  Attach a link
+                </Box>
+                <LinkIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                <FormControl>
+                  <Input
+                    ref={enteredLinkRef}
+                    cursor="grab"
+                    placeholder="https://something.com"
+                    bg="gray.500"
+                    borderRadius="2xl"
+                    textColor="black"
+                  ></Input>
+                  <FormHelperText>Paste your link here.</FormHelperText>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
