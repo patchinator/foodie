@@ -60,7 +60,37 @@ const PostCard = (props) => {
   const themeColor = useColorModeValue("green.300", "gray.800");
   const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
 
-  comments.map(comment => console.log(comment))
+  // delete comment from DB
+
+  const deleteCommentHandler = () => {
+    comments.filter((comment) =>
+      fetch(
+        `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/comments/${comment.id}.json?auth=${authCtx.token}`,
+        { method: "DELETE" }
+      ).then(res => {
+        if (res.ok) {
+          refreshCommentsHandler();
+          toast({
+            description: "Comment succesfully removed",
+            position: "top",
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            description: "Unable to remove comment",
+            position: "top",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
+        }
+      })
+    );
+  };
+
+  // delete posts from DB
 
   const deletePostHandler = () => {
     fetch(
@@ -108,6 +138,8 @@ const PostCard = (props) => {
     const currentUser = authCtx.displayName;
     const currentUserEmail = authCtx.email;
 
+    // post comments to DB
+
     if (enteredComment.trim().length >= 1) {
       if (enteredComment.trim().length <= maxChars) {
         fetch(
@@ -143,6 +175,8 @@ const PostCard = (props) => {
       });
     }
   };
+
+  // fetch all comments from DB
 
   useEffect(() => {
     fetch(
@@ -199,9 +233,7 @@ const PostCard = (props) => {
           <Text>{props.email}</Text>
         </Flex>
         <Flex justify="center">
-          {props.image && (
-            <img src={props.image} width="300" height="300" alt={props.image} />
-          )}
+          {props.image && <img src={props.image} alt={props.image} />}
         </Flex>
         <Box bg={useColorModeValue("green.100", "whiteAlpha.900")}>
           <Text
@@ -215,9 +247,11 @@ const PostCard = (props) => {
             {props.post}
           </Text>
         </Box>
-        {props.link && <Box m="2">
-          <Link href={props.link}>{props.link}</Link>
-        </Box>}
+        {props.link && (
+          <Box m="2">
+            <Link href={props.link}>{props.link}</Link>
+          </Box>
+        )}
         <Box m="2">
           <Flex justify="space-between">
             <Box>
@@ -294,11 +328,22 @@ const PostCard = (props) => {
                         <Box>
                           <Flex justify="space-between">
                             <Text>{comment.commentUser}</Text>
+                            {authCtx.displayName === comment.commentUser && (
+                              <IconButton
+                                onClick={deleteCommentHandler}
+                                size="sm"
+                                colorScheme="red"
+                                icon={<DeleteIcon />}
+                              />
+                            )}
                             <Text>{comment.commentDate}</Text>
                           </Flex>
                         </Box>
                         <Box p="1" bg={inputColor} borderRadius="lg">
                           <Text color="black">{comment.comment}</Text>
+                          {commentLength.length === 0 && (
+                            <Text color="black">Be the first to comment!</Text>
+                          )}
                         </Box>
                         <Divider m="2" />
                       </ListItem>
