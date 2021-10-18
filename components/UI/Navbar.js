@@ -1,9 +1,9 @@
 import { useContext } from "react";
 
-import AuthContext from "../store/auth-context";
+import AuthContext from "../../store/auth-context";
 import Link from "next/link";
 
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { Box, Flex, Text, UnorderedList, ListItem } from "@chakra-ui/layout";
 import {
   Menu,
@@ -22,11 +22,16 @@ import {
   SunIcon,
 } from "@chakra-ui/icons";
 import { useColorMode } from "@chakra-ui/color-mode";
+import logo_black from "../../images/foodie_logo_black.png";
+import logo_white from "../../images/foodie_logo_white.png";
+import Image from "next/image";
+import { useRouter } from "next/dist/client/router";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
   const displayName = authCtx.displayName;
+  const router = useRouter();
 
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -45,6 +50,7 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     authCtx.logout();
+    router.push("/auth/log-in/")
   };
 
   // ---------------------------------------------------------------------------
@@ -52,14 +58,20 @@ const Navbar = () => {
   return (
     <Box>
       <Flex
-        bg="facebook.400"
+        bg={colorMode === "light" ? "green.400" : "gray.700" }
         p="2"
         justifyContent="space-between"
         alignItems="center"
       >
         <Box>
-          {/* <Image width="140" height="100" src={image} alt="foodie logo"></Image> */}
-          <Text>TODO Foodie Logo</Text>
+          <Flex justify="center" align="center">
+            <Image
+              width="250"
+              height="75"
+              src={colorMode === "light" ? logo_black : logo_white}
+              alt="foodie logo"
+            ></Image>
+          </Flex>
         </Box>
         <Box>
           <Flex justifyContent="space-evenly" alignItems="center">
@@ -84,9 +96,10 @@ const Navbar = () => {
               )}
             </UnorderedList>
             <Menu>
-              <MenuButton as={Button}>
-                <HamburgerIcon w="6" h="6" />
-              </MenuButton>
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon w="6" h="6" />}
+              />
               <MenuList listStyleType="none">
                 <MenuItem
                   command={<EditIcon />}
