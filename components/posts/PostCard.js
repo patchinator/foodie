@@ -1,3 +1,5 @@
+import { useContext, useRef, useState, useEffect } from "react";
+
 import {
   Box,
   Text,
@@ -19,10 +21,8 @@ import {
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import { useToast } from "@chakra-ui/toast";
-import { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
 import { Avatar, AvatarBadge } from "@chakra-ui/avatar";
-import Image from "next/image";
 
 const PostCard = (props) => {
   const toast = useToast();
@@ -30,44 +30,54 @@ const PostCard = (props) => {
   const [comments, setComments] = useState([]);
   const [refreshComments, setRefreshComments] = useState(0);
 
+  const themeColor = useColorModeValue("green.300", "gray.800");
+  const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
+
+  const commentLength = comments.filter((post) => post.postId === props.id);
+
+  // calculate Date
+
+  const calculateDate = (date) => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const days = ["Mon", "Tues", "Weds", "Thurs", "Fri", "Sat", "Sun"];
+    const newDate = new Date(date);
+    const minutes = newDate.getMinutes();
+    const hour = newDate.getHours();
+    const day = newDate.getDate();
+    const weekDay = newDate.getDay();
+    const month = newDate.getMonth();
+    const year = newDate.getFullYear();
+
+    return `${hour}:${
+      minutes.toString().split("").length !== 1 ? minutes : "0" + minutes
+    } ${days[weekDay]} ${day}-${months[month]} ${year}`;
+  };
+
   const refreshCommentsHandler = () => {
     setRefreshComments(Math.random());
   };
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const days = ["Mon", "Tues", "Weds", "Thurs", "Fri", "Sat", "Sun"];
-
-  const postDate = new Date(props.date);
-  const postDay = postDate.getDate();
-  const postWeekDay = postDate.getDay();
-  const postMonth = postDate.getMonth();
-  const postYear = postDate.getFullYear();
-
-  const themeColor = useColorModeValue("green.300", "gray.800");
-  const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
-
   // delete comment from DB
 
   const deleteCommentHandler = () => {
-    comments.filter((comment) =>
+    comments.find((comment) =>
       fetch(
         `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/comments/${comment.id}.json?auth=${authCtx.token}`,
         { method: "DELETE" }
-      ).then(res => {
+      ).then((res) => {
         if (res.ok) {
           refreshCommentsHandler();
           toast({
@@ -204,10 +214,6 @@ const PostCard = (props) => {
       });
   }, [refreshComments]);
 
-  const commentLength = comments.filter((post) => post.postId === props.id);
-
-  // console.log(props.user)
-
   return (
     <Flex justify="center">
       <Box bg={themeColor} mb="4" borderRadius="lg" width="40%" boxShadow="lg">
@@ -224,9 +230,7 @@ const PostCard = (props) => {
                 />
               </Avatar>
               <Text fontWeight="bold">
-                {props.user} on {days[postWeekDay]} {postDay}-
-                {months[postMonth] + " "}
-                {postYear}
+                {props.user + " " + calculateDate(props.date)}
               </Text>
             </Flex>
           </Box>
@@ -328,28 +332,40 @@ const PostCard = (props) => {
                         <Box>
                           <Flex justify="space-between">
                             <Text>{comment.commentUser}</Text>
-                            {authCtx.displayName === comment.commentUser && (
-                              <IconButton
-                                onClick={deleteCommentHandler}
-                                size="sm"
-                                colorScheme="red"
-                                icon={<DeleteIcon />}
-                              />
-                            )}
-                            <Text>{comment.commentDate}</Text>
+                            <Box>
+                              <Flex>
+                                <Text mb="1">
+                                  {calculateDate(comment.commentDate)}
+                                </Text>
+                                {authCtx.displayName ===
+                                  comment.commentUser && (
+                                  <IconButton
+                                    ml="2"
+                                    onClick={deleteCommentHandler}
+                                    size="xs"
+                                    colorScheme="red"
+                                    icon={<DeleteIcon />}
+                                  />
+                                )}
+                              </Flex>
+                            </Box>
                           </Flex>
                         </Box>
                         <Box p="1" bg={inputColor} borderRadius="lg">
                           <Text color="black">{comment.comment}</Text>
-                          {commentLength.length === 0 && (
-                            <Text color="black">Be the first to comment!</Text>
-                          )}
                         </Box>
                         <Divider m="2" />
                       </ListItem>
                     ))}
                 </List>
               </AccordionPanel>
+              {commentLength.length === 0 && (
+                <AccordionPanel>
+                  <Text textAlign="center">
+                    No comments. Be the first to comment!
+                  </Text>
+                </AccordionPanel>
+              )}
             </AccordionItem>
           </Accordion>
         </Box>
