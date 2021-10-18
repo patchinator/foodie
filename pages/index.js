@@ -34,6 +34,8 @@ export default function Home() {
             email: data[key].email,
             post: data[key].post,
             date: data[key].date,
+            image: data[key].image,
+            link: data[key].link,
             id: key,
           });
         }

@@ -12,6 +12,8 @@ const Posts = (props) => {
           post={post["post"]}
           email={post["email"]}
           date={post["date"]}
+          image={post["image"]}
+          link={post["link"]}
           onRefresh={props.onRefresh}
         ></PostCard>
       ))}

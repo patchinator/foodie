@@ -1,4 +1,12 @@
-import { Box, Text, Flex, Divider, List, ListItem } from "@chakra-ui/layout";
+import {
+  Box,
+  Text,
+  Flex,
+  Divider,
+  List,
+  ListItem,
+  Link,
+} from "@chakra-ui/layout";
 import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -14,6 +22,7 @@ import { useToast } from "@chakra-ui/toast";
 import { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../../store/auth-context";
 import { Avatar, AvatarBadge } from "@chakra-ui/avatar";
+import Image from "next/image";
 
 const PostCard = (props) => {
   const toast = useToast();
@@ -51,6 +60,8 @@ const PostCard = (props) => {
   const themeColor = useColorModeValue("green.300", "gray.800");
   const inputColor = useColorModeValue("green.100", "whiteAlpha.900");
 
+  comments.map(comment => console.log(comment))
+
   const deletePostHandler = () => {
     fetch(
       `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/posts/${props.id}.json?auth=${authCtx.token}`,
@@ -59,6 +70,14 @@ const PostCard = (props) => {
       }
     ).then((res) => {
       if (res.ok) {
+        comments.map((comment) =>
+          comment.postId === props.id
+            ? fetch(
+                `https://foodie-bcff7-default-rtdb.europe-west1.firebasedatabase.app/comments/${comment.id}.json?auth=${authCtx.token}`,
+                { method: "DELETE" }
+              )
+            : ""
+        );
         props.onRefresh();
         toast({
           description: "Post succesfully removed",
@@ -179,11 +198,26 @@ const PostCard = (props) => {
           </Box>
           <Text>{props.email}</Text>
         </Flex>
+        <Flex justify="center">
+          {props.image && (
+            <img src={props.image} width="300" height="300" alt={props.image} />
+          )}
+        </Flex>
         <Box bg={useColorModeValue("green.100", "whiteAlpha.900")}>
-          <Text mb="2" color="black" p="2" boxShadow="lg" flexGrow="1" whiteSpace="pre-wrap">
+          <Text
+            mb="2"
+            color="black"
+            p="2"
+            boxShadow="lg"
+            flexGrow="1"
+            whiteSpace="pre-wrap"
+          >
             {props.post}
           </Text>
         </Box>
+        {props.link && <Box m="2">
+          <Link href={props.link}>{props.link}</Link>
+        </Box>}
         <Box m="2">
           <Flex justify="space-between">
             <Box>
